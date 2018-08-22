@@ -2,13 +2,14 @@ const cutString = require('.')
 const ava = require('ava')
 
 ava('cut string with default options', t => {
-    const arr1 = [
+    var arr1 = [
         ['abcd', 3, 'abc'],
         ['ａｂｃｄ', 4, 'ａｂ'],
         ['👨‍👩‍👧', 0, ''],
         ['👨‍👩‍👧我😀❣️😸abc啊', 10, '👨‍👩‍👧我😀❣️😸'],
         ['\u001B\u001B古池や', 3, '\u001B\u001B古'],
         ['\u001B\u001B', 0, '\u001B\u001B'],
+        ['🇦🇺🇦🇺🇦🇺🇦🇺🇦🇺', 4, '🇦🇺🇦🇺']
     ]
 
     arr1.forEach(([str, limit, result]) => {
@@ -17,7 +18,7 @@ ava('cut string with default options', t => {
 })
 
 ava('cut string with setting emojiWidth', t => {
-    const arr2 = [
+    var arr2 = [
         ['👨‍👩‍👧我😀❣️😸abc啊', 10, '👨‍👩‍👧我😀'],
         ['a啊ＦＡ👨‍👩‍👧我😀❣️😸', 10, 'a啊ＦＡ👨‍👩‍👧']
     ]
@@ -28,7 +29,7 @@ ava('cut string with setting emojiWidth', t => {
 })
 
 ava('cut string with ellipsis', t => {
-    const arr1 = [
+    var arr = [
         ['abcd', 3, 'a...'],
         ['ａｂｃｄ', 4, 'ａ...'],
         ['👨‍👩‍👧', 0, ''],
@@ -37,7 +38,32 @@ ava('cut string with ellipsis', t => {
         ['\u001B\u001B', 0, '\u001B\u001B'],
     ]
 
-    arr1.forEach(([str, limit, result]) => {
+    arr.forEach(([str, limit, result]) => {
         t.is(cutString(str, limit, { ellipsis: true }), result)
     })
+
+    var arr = [
+        ['abcd', 3, 'a……'],
+        ['ａｂｃｄ', 4, 'ａ……'],
+        ['👨‍👩‍👧', 0, ''],
+        ['👨‍👩‍👧我😀❣️😸abc啊', 10, '👨‍👩‍👧我😀❣️……'],
+        ['\u001B\u001B古池や', 3, '\u001B\u001B……'],
+        ['\u001B\u001B', 0, '\u001B\u001B'],
+    ]
+
+    arr.forEach(([str, limit, result]) => {
+        t.is(cutString(str, limit, { ellipsis: true, ellipsisText: '……' }), result)
+    })
+
+    var arr = [
+        ['abcd', 3, '……'],
+        ['ａｂｃｄ', 5, 'ａ……'],
+        ['👨‍👩‍👧', 0, ''],
+        ['👨‍👩‍👧我😀❣️😸abc啊', 10, '👨‍👩‍👧我😀……'],
+    ]
+
+    arr.forEach(([str, limit, result]) => {
+        t.is(cutString(str, limit, { ellipsis: true, ellipsisText: '……', ellipsisWidth: 3 }), result)
+    })
 })
+

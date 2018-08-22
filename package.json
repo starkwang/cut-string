@@ -11,7 +11,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
-    "test": "ava test.js"
+    "test": "babel src --out-dir lib && ava test.js --verbose"
   },
   "repository": {
     "type": "git",

@@ -2,10 +2,16 @@
 
 const stringWidth = require('string-width')
 
+function isRegionalIndicatorSymbol(codePoint) {
+    return 0x1f1e6 <= codePoint && codePoint <= 0x1f1ff
+}
+
 function cutString (str, limit, options) {
     options = {
         emojiWidth: 2,
         ellipsis: false,
+        ellipsisText: '...',
+        ellipsisWidth: 2,
         ...options
     }
     let chars = []
@@ -16,8 +22,14 @@ function cutString (str, limit, options) {
         const codePoint = str.codePointAt(i);
         const nextCodePoint = str.codePointAt(i + 1)
         if (codePoint > 0xffff) {
-            chars.push([codePoint])
-            i += 2
+            if (isRegionalIndicatorSymbol(codePoint) && isRegionalIndicatorSymbol(str.codePointAt(i + 2))) {
+                // Regional Indicator Symbol
+                chars.push([codePoint, str.codePointAt(i + 2)])
+                i += 4
+            } else {
+                chars.push([codePoint])
+                i += 2
+            }
             continue
         } else if (nextCodePoint === 0xfe0f || nextCodePoint === 0xfe0e) {
             chars.push([codePoint, nextCodePoint])
@@ -33,7 +45,6 @@ function cutString (str, limit, options) {
     chars = combineZWJ(chars)
 
 
-    // console.log(chars)
     chars = chars.map(codePoints => {
         const isEmoji = codePoints[0] > 0xffff || codePoints[1] === 0xfe0f || codePoints[1] === 0xfe0e
         return {
@@ -46,25 +57,24 @@ function cutString (str, limit, options) {
     const result = []
     let hasEllipsis = false
     for (let char of chars) {
-        totalWidth += char.width
-        if (totalWidth <= limit) {
+        if (totalWidth + char.width <= limit) {
             result.push(char)
+            totalWidth += char.width
         } else {
             hasEllipsis = true
             break
         }
     }
 
-    let deleteWidth = 0
-
+    let deleteWidth = limit - totalWidth
     if (options.ellipsis && hasEllipsis && result.length > 0) {
         for (let i = result.length - 1; i >= 0; i--) {
             deleteWidth += result[i].width
             delete result[i]
-            if (deleteWidth >= 2) {
+            if (deleteWidth >= options.ellipsisWidth) {
                 result.push({
-                    character: '...',
-                    width: 2
+                    character: options.ellipsisText,
+                    width: options.ellipsisWidth
                 })
                 break
             }
