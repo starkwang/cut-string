@@ -26,3 +26,18 @@ ava('cut string with setting emojiWidth', t => {
         t.is(cutString(str, limit, { emojiWidth: 3 }), result)
     })
 })
+
+ava('cut string with ellipsis', t => {
+    const arr1 = [
+        ['abcd', 3, 'a...'],
+        ['ａｂｃｄ', 4, 'ａ...'],
+        ['👨‍👩‍👧', 0, ''],
+        ['👨‍👩‍👧我😀❣️😸abc啊', 10, '👨‍👩‍👧我😀❣️...'],
+        ['\u001B\u001B古池や', 3, '\u001B\u001B...'],
+        ['\u001B\u001B', 0, '\u001B\u001B'],
+    ]
+
+    arr1.forEach(([str, limit, result]) => {
+        t.is(cutString(str, limit, { ellipsis: true }), result)
+    })
+})

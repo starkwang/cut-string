@@ -1,6 +1,6 @@
 {
   "name": "cut-string",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Cut a string if too long. Support CJK(漢字) and emoji❤️.",
   "keywords": [
     "string",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-3": "^6.24.1"
   }
 }

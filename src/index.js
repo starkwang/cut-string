@@ -2,9 +2,12 @@
 
 const stringWidth = require('string-width')
 
-function cutString (str, limit, options={
-    emojiWidth: 2
-}) {
+function cutString (str, limit, options) {
+    options = {
+        emojiWidth: 2,
+        ellipsis: false,
+        ...options
+    }
     let chars = []
     for (let i = 0; i < str.length; i++) {
         // console.log(str.codePointAt(i).toString(16))
@@ -39,18 +42,36 @@ function cutString (str, limit, options={
         }
     })
 
-    let totalWidth = 0
+    var totalWidth = 0
     const result = []
+    let hasEllipsis = false
     for (let char of chars) {
         totalWidth += char.width
         if (totalWidth <= limit) {
             result.push(char)
         } else {
+            hasEllipsis = true
             break
         }
     }
 
-    return result.map(char => char.character).join('');
+    let deleteWidth = 0
+
+    if (options.ellipsis && hasEllipsis && result.length > 0) {
+        for (let i = result.length - 1; i >= 0; i--) {
+            deleteWidth += result[i].width
+            delete result[i]
+            if (deleteWidth >= 2) {
+                result.push({
+                    character: '...',
+                    width: 2
+                })
+                break
+            }
+        }
+    }
+
+    return result.map(char => char.character).join('')
 }
 
 function combineZWJ(chars) {

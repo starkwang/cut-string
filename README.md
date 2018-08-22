@@ -22,6 +22,9 @@ cutString('我在东北玩泥巴', 4)
 cutString('👨‍👩‍👧😀❣️😸', 6)
 //=> '👨‍👩‍👧😀❣️'
 
+cutString('我在东北玩泥巴', 6, { ellipsis: true })
+//=> '我在...'
+
 cutString('👨‍👩‍👧😀❣️😸', 6, { emojiWidth: 3 })
 //=> '👨‍👩‍👧😀'
 
