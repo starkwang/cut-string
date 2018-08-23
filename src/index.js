@@ -6,6 +6,10 @@ function isRegionalIndicatorSymbol(codePoint) {
     return 0x1f1e6 <= codePoint && codePoint <= 0x1f1ff
 }
 
+function isEmojiModifierFitzpatrick(codePoint) {
+    return 0x1f3fb <= codePoint && codePoint <= 0x1f3ff
+}
+
 function cutString (str, limit, options) {
     options = {
         emojiWidth: 2,
@@ -22,7 +26,10 @@ function cutString (str, limit, options) {
         const codePoint = str.codePointAt(i);
         const nextCodePoint = str.codePointAt(i + 1)
         if (codePoint > 0xffff) {
-            if (isRegionalIndicatorSymbol(codePoint) && isRegionalIndicatorSymbol(str.codePointAt(i + 2))) {
+            if (
+                (isRegionalIndicatorSymbol(codePoint) && isRegionalIndicatorSymbol(str.codePointAt(i + 2)) ||
+                (isEmojiModifierFitzpatrick(str.codePointAt(i + 2)))
+            )) {
                 // Regional Indicator Symbol
                 chars.push([codePoint, str.codePointAt(i + 2)])
                 i += 4
