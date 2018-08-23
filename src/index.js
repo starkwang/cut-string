@@ -32,8 +32,13 @@ function cutString (str, limit, options) {
             }
             continue
         } else if (nextCodePoint === 0xfe0f || nextCodePoint === 0xfe0e) {
-            chars.push([codePoint, nextCodePoint])
-            i += 2
+            if (str.codePointAt(i + 2) === 0x20e3) {
+                chars.push([codePoint, nextCodePoint, str.codePointAt(i + 2)])
+                i += 3
+            } else {
+                chars.push([codePoint, nextCodePoint])
+                i += 2
+            }
             continue
         } else {
             chars.push([codePoint])
