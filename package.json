@@ -1,6 +1,6 @@
 {
   "name": "cut-string",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Cut a string if too long. Support CJK(漢字) and emoji❤️.",
   "keywords": [
     "string",
