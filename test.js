@@ -1,4 +1,4 @@
-const cutString = require('./src/index2')
+const cutString = require('./src')
 const ava = require('ava')
 
 ava('cut string with default options', t => {
